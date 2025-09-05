@@ -331,7 +331,7 @@ async function generateBotResponse(params: {
     console.error('Error calling OpenAI:', error)
     
     // Enhanced fallback responses if OpenAI fails
-    const lowerMessage = userMessage.toLowerCase()
+    const lowerMessage = params.userMessage.toLowerCase()
     
     if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
       return "Hello! I'm here to help you. How can I assist you today?"
