@@ -53,6 +53,7 @@ export default function BotPreviewPage() {
         instructions: apiBot.instructions,
         publicKey: apiBot.publicKey || apiBot.id,
         isActive: apiBot.status === 'active',
+        status: apiBot.status,
         createdAt: new Date(apiBot.createdAt),
         updatedAt: new Date(apiBot.createdAt), // API doesn't provide updatedAt, use createdAt
         settings: {
