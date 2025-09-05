@@ -158,7 +158,12 @@ export async function POST(request: NextRequest) {
       where: { conversationId: conversation.id }
     })
 
-    if (messageCount >= 3 && !conversation.lead) {
+    // Check if there's already a lead for this conversation
+    const existingLead = await db.lead.findFirst({
+      where: { conversationId: conversation.id }
+    })
+
+    if (messageCount >= 3 && !existingLead) {
       // Extract potential lead information from messages
       const leadInfo = await extractLeadInfo(conversation.id)
       
