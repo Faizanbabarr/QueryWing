@@ -219,7 +219,7 @@ export async function POST(request: NextRequest) {
     if (wantsLiveAgent) {
       // Create live agent request
       try {
-        await db.liveAgentRequest.create({
+        await db.liveChatRequest.create({
           data: {
             tenantId: bot.tenantId,
             conversationId: conversation.id,
