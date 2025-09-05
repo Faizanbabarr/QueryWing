@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 
     try {
       await db.tenant.create({ data: { id: tenantId, name: name || 'Workspace', plan: 'pro', settings: {} } })
-      const bot = await db.bot.create({ data: { name: 'Website Assistant', description: 'Answers from your content', instructions: 'Be concise and helpful.', status: 'active', tenantId } })
+      const bot = await db.bot.create({ data: { name: 'Website Assistant', description: 'Answers from your content', instructions: 'Be concise and helpful.', status: 'active', tenantId, settings: {} } })
       const embed = `<script async src="${process.env.NEXT_PUBLIC_APP_URL || ''}/widget.js" data-bot-id="${bot.id}" data-bot-name="${bot.name}" data-primary-color="#6366f1" data-position="bottom-right"></script>`
       return NextResponse.json({ tenantId, botId: bot.id, embed })
     } catch (dbError) {
