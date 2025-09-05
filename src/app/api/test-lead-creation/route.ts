@@ -16,7 +16,8 @@ export async function POST(request: NextRequest) {
         status: 'new',
         source: 'Test API',
         tags: ['test'],
-        botId: 'demo-bot'
+        botId: 'demo-bot',
+        conversationId: 'test-conversation-1'
       }
     })
 
