@@ -26,13 +26,13 @@ export async function GET(request: NextRequest) {
             messages: {
               orderBy: { createdAt: 'desc' },
               take: 5
+            },
+            bot: {
+              select: {
+                id: true,
+                name: true
+              }
             }
-          }
-        },
-        bot: {
-          select: {
-            id: true,
-            name: true
           }
         }
       },
