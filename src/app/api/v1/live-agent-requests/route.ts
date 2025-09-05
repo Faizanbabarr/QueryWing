@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const whereClause: any = { tenantId }
     if (status) whereClause.status = status
 
-    const requests = await db.liveAgentRequest.findMany({
+    const requests = await db.liveChatRequest.findMany({
       where: whereClause,
       include: {
         conversation: {
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if there's already a pending request for this conversation
-    const existingRequest = await db.liveAgentRequest.findFirst({
+    const existingRequest = await db.liveChatRequest.findFirst({
       where: {
         conversationId,
         status: { in: ['pending', 'assigned'] }
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create live agent request
-    const liveAgentRequest = await db.liveAgentRequest.create({
+    const liveChatRequest = await db.liveChatRequest.create({
       data: {
         tenantId,
         conversationId,
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
       console.log('[notify] live-agent email skipped:', e)
     }
 
-    return NextResponse.json({ liveAgentRequest })
+    return NextResponse.json({ liveChatRequest })
   } catch (error) {
     console.error('Error creating live agent request:', error)
     return NextResponse.json(
@@ -138,7 +138,7 @@ export async function PATCH(request: NextRequest) {
     if (status === 'assigned') updateData.assignedAt = new Date()
     if (status === 'completed') updateData.completedAt = new Date()
 
-    const liveAgentRequest = await db.liveAgentRequest.update({
+    const liveChatRequest = await db.liveChatRequest.update({
       where: { id: requestId },
       data: updateData,
       include: {
@@ -160,7 +160,7 @@ export async function PATCH(request: NextRequest) {
       }
     })
 
-    return NextResponse.json({ liveAgentRequest })
+    return NextResponse.json({ liveChatRequest })
   } catch (error) {
     console.error('Error updating live agent request:', error)
     return NextResponse.json(
@@ -183,7 +183,7 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    await db.liveAgentRequest.delete({
+    await db.liveChatRequest.delete({
       where: { id: requestId }
     })
 
