@@ -317,7 +317,7 @@ async function generateBotResponse(params: {
     // Call OpenAI API
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
-      messages,
+      messages: messages as any,
       max_tokens: Math.max(50, Math.min(2048, Math.floor(maxTokens))),
       temperature: Math.max(0, Math.min(2, temperature)),
       top_p: Math.max(0, Math.min(1, topP)),
