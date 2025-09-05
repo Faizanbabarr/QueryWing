@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       
       tokenTest = `✅ Token created: ${testToken.substring(0, 20)}... | Expires: ${testExpiration.toISOString()}`
     } catch (error) {
-      tokenTest = `❌ Token test failed: ${error.message}`
+      tokenTest = `❌ Token test failed: ${error instanceof Error ? error.message : 'Unknown error'}`
     }
 
     // Test sending a simple email
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       })
       emailResult = '✅ Email sent successfully'
     } catch (error) {
-      emailResult = `❌ Email failed: ${error.message}`
+      emailResult = `❌ Email failed: ${error instanceof Error ? error.message : 'Unknown error'}`
     }
 
     return NextResponse.json({
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Email config test error:', error)
     return NextResponse.json(
-      { error: 'Failed to test email configuration', details: error.message },
+      { error: 'Failed to test email configuration', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Test email error:', error)
     return NextResponse.json(
-      { error: 'Failed to send test email', details: error.message },
+      { error: 'Failed to send test email', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
