@@ -146,7 +146,7 @@ export async function PATCH(request: NextRequest) {
             }
           }
         },
-        assignedAgent: {
+        agent: {
           select: {
             id: true,
             name: true,
