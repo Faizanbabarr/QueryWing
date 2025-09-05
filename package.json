@@ -1,6 +1,7 @@
 {
   "name": "querywing",
-  "version": "0.1.0",
+  "version": "1.0.0-production-ready",
+  "description": "QueryWing - AI Website Assistant - All TypeScript errors fixed, ready for production deployment",
   "private": true,
   "scripts": {
     "dev": "next dev",
