@@ -19,9 +19,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if conversation exists
+    // Check if conversation exists and get bot for tenantId
     const conversation = await db.conversation.findUnique({
-      where: { id: conversationId }
+      where: { id: conversationId },
+      include: { bot: true }
     })
 
     if (!conversation) {
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
         conversationId,
         rating,
         feedback: feedback || null,
-        tenantId: conversation.tenantId
+        tenantId: conversation.bot.tenantId
       }
     })
 
