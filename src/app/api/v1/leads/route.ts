@@ -97,7 +97,8 @@ export async function POST(request: NextRequest) {
               retrievalMode: 'hybrid',
               status: 'active',
               published: true,
-              publicKey: `default-bot-${Date.now()}`
+              publicKey: `default-bot-${Date.now()}`,
+              settings: {}
             }
           })
           actualBotId = defaultBot.id
