@@ -82,12 +82,8 @@ export async function POST(request: NextRequest) {
       data: {
         tenantId,
         conversationId,
-        visitorId,
-        botId,
-        requestType,
         priority,
-        status: 'pending',
-        createdAt: new Date()
+        status: 'pending'
       },
       include: {
         conversation: {
