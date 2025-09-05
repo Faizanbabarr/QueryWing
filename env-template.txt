@@ -1,0 +1,28 @@
+# Copy this file to .env.local and fill in your actual values
+
+# Database
+DATABASE_URL="postgresql://Faizan:sl5oLRI4SLT3uFFqlSVl7A@punchy-mermaid-8647.jxf.gcp-europe-west2.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full"
+
+# Stripe Configuration - Get these from your Stripe Dashboard
+STRIPE_SECRET_KEY=sk_test_REDACTED
+STRIPE_PUBLISHABLE_KEY=pk_test_your_actual_publishable_key_here
+
+# Stripe Price IDs - Create these in your Stripe Dashboard
+# Go to Products > Select Product > Pricing > Copy Price ID
+STRIPE_PRICE_STARTER=price_REDACTED
+STRIPE_PRICE_GROWTH=price_REDACTED
+STRIPE_PRICE_SCALE=price_REDACTED
+
+# App Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-nextauth-secret-key-here
+NEXTAUTH_URL=http://localhost:3000
+
+# Email Configuration (Resend)
+RESEND_API_KEY=re_PLASGXav_your_actual_resend_api_key_here
+
+# Alternative SMTP Configuration (if not using Resend)
+# SMTP_HOST=smtp.gmail.com
+# SMTP_PORT=587
+# SMTP_USER=your-email@gmail.com
+# SMTP_PASS=your-app-password

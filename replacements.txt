@@ -1,0 +1,4 @@
+﻿regex:pk_test_[A-Za-z0-9_]+==>pk_test_REDACTED
+regex:sk_test_[A-Za-z0-9_]+==>sk_test_REDACTED
+regex:price_[A-Za-z0-9_]+==>price_REDACTED
+regex:SG\.[A-Za-z0-9_\.-]+==>SG_REDACTED

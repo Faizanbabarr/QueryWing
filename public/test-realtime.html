@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Chatbot Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .status {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .status h3 {
+            margin: 0 0 15px 0;
+            color: #fbbf24;
+        }
+        
+        .status p {
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .test-info {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .test-info h3 {
+            color: #fbbf24;
+            margin: 0 0 15px 0;
+        }
+        
+        .test-info ul {
+            margin: 0;
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+        
+        .console-log {
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .console-log h3 {
+            color: #fbbf24;
+            margin: 0 0 15px 0;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .log-info { color: #60a5fa; }
+        .log-success { color: #34d399; }
+        .log-warning { color: #fbbf24; }
+        .log-error { color: #f87171; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Real-time Chatbot Test</h1>
+        
+        <div class="status">
+            <h3>🔍 Test Status</h3>
+            <p>This page tests the real-time chatbot widget connected to your CockroachDB database.</p>
+        </div>
+        
+        <div class="test-info">
+            <h3>📋 What to Test:</h3>
+            <ul>
+                <li><strong>Widget Loading:</strong> Check if the floating chat button appears</li>
+                <li><strong>Bot Connection:</strong> Verify bot details are fetched from database</li>
+                <li><strong>Conversation Creation:</strong> Test if new conversations are created</li>
+                <li><strong>Message Sending:</strong> Send a message and check API response</li>
+                <li><strong>Real-time Tracking:</strong> Monitor analytics events in console</li>
+                <li><strong>Database Storage:</strong> Check if data is stored in CockroachDB</li>
+            </ul>
+        </div>
+        
+        <div class="console-log">
+            <h3>📊 Console Logs</h3>
+            <div id="log-container">
+                <div class="log-entry log-info">🚀 Page loaded - waiting for widget initialization...</div>
+            </div>
+        </div>
+        
+        <div class="status">
+            <h3>🎯 Instructions</h3>
+            <p>1. Open browser console (F12) to see real-time logs<br>
+               2. Click the floating chat button in bottom-right corner<br>
+               3. Send a test message<br>
+               4. Check console for real-time events and database connections</p>
+        </div>
+    </div>
+
+    <!-- QueryWing Real-time Chatbot Widget -->
+    <script src="widget.js" 
+            data-bot-id="cmf4ovq74000a9aq83e7m2big"
+            data-bot-name="Test Bot"
+            data-primary-color="#fbbf24"
+            data-position="bottom-right">
+    </script>
+    
+    <script>
+        // Capture console logs and display them on the page
+        const logContainer = document.getElementById('log-container');
+        
+        function addLog(message, type = 'info') {
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        // Override console.log to capture logs
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            
+            const message = args.join(' ');
+            if (message.includes('🚀')) {
+                addLog('Widget initialized successfully', 'success');
+            } else if (message.includes('✅')) {
+                addLog('Bot loaded from database', 'success');
+            } else if (message.includes('💬')) {
+                addLog('Conversation started', 'success');
+            } else if (message.includes('📤')) {
+                addLog('Message sent to API', 'info');
+            } else if (message.includes('📥')) {
+                addLog('Message received from API', 'success');
+            } else if (message.includes('🔓')) {
+                addLog('Chat widget opened', 'info');
+            } else if (message.includes('🔒')) {
+                addLog('Chat widget closed', 'info');
+            } else if (message.includes('🎯')) {
+                addLog('Widget ready for testing', 'success');
+            }
+        };
+        
+        // Override console.error to capture errors
+        const originalError = console.error;
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            
+            const message = args.join(' ');
+            addLog(`ERROR: ${message}`, 'error');
+        };
+        
+        // Listen for widget events
+        if (window.QueryWingWidget) {
+            window.QueryWingWidget.on('bot-loaded', (bot) => {
+                addLog(`Bot "${bot.name}" loaded successfully`, 'success');
+            });
+            
+            window.QueryWingWidget.on('conversation_started', (data) => {
+                addLog(`Conversation started with ID: ${data.conversationId}`, 'success');
+            });
+            
+            window.QueryWingWidget.on('message_sent', (data) => {
+                addLog(`Message sent (${data.messageLength} chars)`, 'info');
+            });
+            
+            window.QueryWingWidget.on('message_received', (data) => {
+                addLog(`Message received (${data.messageLength} chars)`, 'success');
+            });
+        }
+        
+        addLog('Page ready - widget should initialize shortly...', 'info');
+    </script>
+</body>
+</html>

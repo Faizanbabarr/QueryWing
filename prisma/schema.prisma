@@ -1,0 +1,358 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id              String   @id @default(cuid())
+  name            String
+  domain          String?  @unique
+  plan            String   @default("starter") // starter (free), growth, scale
+  stripeCustomerId String? @unique
+  settings        Json
+  // Plan-specific limits and credits
+  botCredits      Int      @default(0) // Available bot message credits
+  maxBots         Int      @default(1) // Maximum number of bots allowed
+  maxLiveAgents   Int      @default(0) // Maximum number of live agents allowed
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  users           User[]
+  bots            Bot[]
+  sources         Source[]
+  leads           Lead[]
+  events          Event[]
+  subscriptions   Subscription[]
+  liveChatRequests LiveChatRequest[]
+  analytics       Analytics[]
+  botCreditUsage  BotCreditUsage[]
+  liveAgents      LiveAgent[]
+  conversationRatings ConversationRating[]
+
+  @@map("tenants")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  tenantId  String
+  role      String   @default("admin") // owner, admin, agent
+  name      String
+  email     String
+  emailVerified Boolean @default(false)
+  avatarUrl String?
+  notificationPreferences Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  passwords Password[]
+  sessions  Session[]
+  emailVerifications EmailVerificationToken[]
+  liveAgent LiveAgent?
+
+  @@unique([tenantId, email])
+  @@map("users")
+}
+
+model Password {
+  id        String   @id @default(cuid())
+  userId    String
+  hash      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("passwords")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Bot {
+  id             String   @id @default(cuid())
+  tenantId       String
+  name           String
+  description    String   @default("")
+  instructions   String
+  temperature    Float    @default(0.7)
+  topP           Float    @default(0.9)
+  retrievalMode  String   @default("hybrid") // hybrid, vector, keyword
+  status         String   @default("active")
+  published      Boolean  @default(false)
+  publicKey      String   @unique @default(cuid())
+  settings       Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  tenant         Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  conversations  Conversation[]
+  leads          Lead[]
+  botCreditUsage BotCreditUsage[]
+
+  @@unique([tenantId, name]) // Ensure bot names are unique per tenant
+  @@map("bots")
+}
+
+model Source {
+  id         String   @id @default(cuid())
+  tenantId   String
+  type       String   // upload, url, sitemap, notion, gdrive
+  status     String   @default("pending") // pending, processing, completed, failed
+  configJson Json
+  url        String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  tenant     Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  documents  Document[]
+
+  @@map("sources")
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  sourceId  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  source    Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  chunks    Chunk[]
+
+  @@map("documents")
+}
+
+model Chunk {
+  id         String   @id @default(cuid())
+  documentId String
+  index      Int
+  content    String
+  tokens     Int?
+  createdAt  DateTime @default(now())
+
+  // Relations
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@map("chunks")
+}
+
+model Conversation {
+  id           String    @id @default(cuid())
+  botId        String
+  visitorId    String
+  status       String    @default("active")
+  avgRating    Float?    // Average rating from user feedback
+  ratingCount  Int       @default(0) // Number of ratings received
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  bot          Bot @relation(fields: [botId], references: [id], onDelete: Cascade)
+  lead         Lead?
+  messages     Message[]
+  liveChatRequest LiveChatRequest?
+  ratings      ConversationRating[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  role           String   // user, assistant, system, agent
+  content        String
+  tokens         Int?
+  latencyMs      Int?
+  createdAt      DateTime @default(now())
+
+  // Relations
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  botCreditUsage BotCreditUsage?
+
+  @@map("messages")
+}
+
+model Lead {
+  id             String    @id @default(cuid())
+  tenantId       String
+  conversationId String    @unique
+  name           String?
+  email          String?
+  phone          String?
+  company        String?
+  tags           String[]  @default([])
+  status         String    @default("new")
+  source         String    @default("chat")
+  botId          String?
+  notes          String?
+  score          Int?      @default(70)
+  lastContacted  DateTime?
+  capturedAt     DateTime  @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relations
+  tenant         Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  bot            Bot?        @relation(fields: [botId], references: [id])
+
+  @@map("leads")
+}
+
+model LiveChatRequest {
+  id             String   @id @default(cuid())
+  tenantId       String
+  conversationId String   @unique
+  agentId        String?
+  status         String   @default("pending") // pending, accepted, in-progress, closed
+  priority       String   @default("normal") // low, normal, high, urgent
+  issue          String?
+  acceptedAt     DateTime?
+  closedAt       DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  tenant         Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  agent          LiveAgent?   @relation(fields: [agentId], references: [id])
+
+  @@map("live_chat_requests")
+}
+
+model Analytics {
+  id         String   @id @default(cuid())
+  tenantId   String
+  type       String   // page_view, chat_started, lead_captured, message_sent
+  page       String?
+  visitorId  String?
+  botId      String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  // Relations
+  tenant     Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("analytics")
+}
+
+model Event {
+  id         String   @id @default(cuid())
+  tenantId   String
+  type       String
+  payloadJson Json
+  createdAt  DateTime @default(now())
+
+  // Relations
+  tenant     Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("events")
+}
+
+model Subscription {
+  id                String   @id @default(cuid())
+  tenantId          String
+  plan              String
+  seats             Int      @default(1)
+  usagePeriodStart  DateTime
+  usagePeriodEnd    DateTime
+  limitsJson        Json
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  tenant            Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model BotCreditUsage {
+  id          String   @id @default(cuid())
+  tenantId    String
+  botId       String
+  messageId   String   @unique
+  tokensUsed  Int      @default(0)
+  cost        Float    @default(0.0) // Cost in USD
+  createdAt   DateTime @default(now())
+
+  // Relations
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  bot         Bot    @relation(fields: [botId], references: [id], onDelete: Cascade)
+  message     Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@map("bot_credit_usage")
+}
+
+model LiveAgent {
+  id          String   @id @default(cuid())
+  tenantId    String
+  userId      String   @unique
+  name        String
+  email       String
+  status      String   @default("available") // available, busy, offline
+  hourlyRate  Float    @default(40.0) // Default $40/hour
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  liveChatRequests LiveChatRequest[]
+
+  @@unique([tenantId, userId])
+  @@map("live_agents")
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("email_verification_tokens")
+}
+
+model ConversationRating {
+  id             String   @id @default(cuid())
+  conversationId String
+  tenantId       String
+  rating         Int      // 1-5 star rating
+  feedback       String?  // Optional feedback text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  tenant        Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId])
+  @@map("conversation_ratings")
+}

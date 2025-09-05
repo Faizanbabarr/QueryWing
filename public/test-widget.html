@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Widget Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .test-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .test-section h3 {
+            color: #fbbf24;
+            margin: 0 0 15px 0;
+        }
+        
+        .test-section p {
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .embed-code {
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow-x: auto;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+        
+        .status.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        
+        .status.info {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Chatbot Widget Test</h1>
+        
+        <div class="test-section">
+            <h3>🔍 Test Status</h3>
+            <p>This page tests if the chatbot widget is working correctly on your website.</p>
+        </div>
+        
+        <div class="test-section">
+            <h3>📋 What to Test:</h3>
+            <ul style="text-align: left; line-height: 1.8;">
+                <li><strong>Widget Loading:</strong> Check if the floating chat button appears</li>
+                <li><strong>Chat Functionality:</strong> Click the button and try sending a message</li>
+                <li><strong>Bot Response:</strong> Verify the bot responds to your messages</li>
+                <li><strong>UI Elements:</strong> Check if all buttons and inputs work properly</li>
+            </ul>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔧 Embed Code Used:</h3>
+            <div class="embed-code">
+&lt;script async src="/widget.js" 
+  data-bot-id="your-bot-id" 
+  data-bot-name="Your Bot" 
+  data-primary-color="#6366f1" 
+  data-position="bottom-right" 
+  data-theme="light"
+  data-welcome-message="Hello! How can I help you today?"
+&gt;&lt;/script&gt;
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🎯 Instructions</h3>
+            <p>1. Look for the floating chat button in the bottom-right corner<br>
+               2. Click it to open the chat interface<br>
+               3. Try sending a test message<br>
+               4. Check if the bot responds</p>
+        </div>
+        
+        <div id="widget-status" class="status info">
+            🔄 Widget loading... Please wait for the chat button to appear.
+        </div>
+    </div>
+
+    <!-- Chatbot Widget -->
+    <script async src="/widget.js" 
+      data-bot-id="your-bot-id" 
+      data-bot-name="Your Bot" 
+      data-primary-color="#6366f1" 
+      data-position="bottom-right" 
+      data-theme="light"
+      data-welcome-message="Hello! How can I help you today?"
+    ></script>
+    
+    <script>
+        // Monitor widget loading
+        let widgetLoaded = false;
+        let checkCount = 0;
+        const maxChecks = 20; // Check for 10 seconds
+        
+        function checkWidget() {
+            checkCount++;
+            
+            // Check if widget elements exist
+            const launcher = document.querySelector('.qw-launcher');
+            const chatContainer = document.querySelector('.qw-chat-container');
+            
+            if (launcher && chatContainer) {
+                widgetLoaded = true;
+                document.getElementById('widget-status').className = 'status success';
+                document.getElementById('widget-status').innerHTML = '✅ Widget loaded successfully! Look for the chat button in the bottom-right corner.';
+                return;
+            }
+            
+            if (checkCount >= maxChecks) {
+                document.getElementById('widget-status').className = 'status error';
+                document.getElementById('widget-status').innerHTML = '❌ Widget failed to load. Check the browser console for errors.';
+                return;
+            }
+            
+            // Check again in 500ms
+            setTimeout(checkWidget, 500);
+        }
+        
+        // Start checking after a short delay
+        setTimeout(checkWidget, 1000);
+        
+        // Listen for widget events
+        window.addEventListener('load', () => {
+            if (window.QueryWingWidget) {
+                console.log('✅ QueryWing Widget loaded successfully!');
+            } else {
+                console.log('❌ QueryWing Widget not found');
+            }
+        });
+    </script>
+</body>
+</html>

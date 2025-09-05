@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueryWing Chatbot Demo - Beautiful Widget</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .cta-section {
+            text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .cta-section p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 18px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .widget-info {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .widget-info h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .widget-info p {
+            color: rgba(255,255,255,0.9);
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🚀 Beautiful Chatbot Widget</h1>
+            <p>Experience the next generation of customer engagement with our stunning, animated chatbot widget. Beautiful UI, smooth animations, and powerful functionality.</p>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>Stunning Animations</h3>
+                <p>Fluid animations, floating effects, and smooth transitions that make your chatbot feel alive and engaging.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Modern Design</h3>
+                <p>Clean, contemporary UI with gradient backgrounds, glassmorphism effects, and beautiful typography.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Responsive & Mobile</h3>
+                <p>Perfect on all devices with adaptive layouts and touch-friendly interactions.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Lightning Fast</h3>
+                <p>Optimized performance with smooth scrolling, instant responses, and efficient animations.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3>Easy Integration</h3>
+                <p>Simple one-line script tag integration with customizable colors, positions, and branding.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Real-time Chat</h3>
+                <p>Live typing indicators, message animations, and seamless conversation flow.</p>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <h2>Ready to Transform Your Website?</h2>
+            <p>Add this beautiful chatbot to your website in just one line of code. Engage your visitors with stunning visuals and powerful AI capabilities.</p>
+            <a href="#integration" class="cta-button">Get Started Now</a>
+        </div>
+        
+        <div class="widget-info" id="integration">
+            <h3>📋 Integration Guide</h3>
+            <p>Add this beautiful chatbot to your website by including this single script tag:</p>
+            
+            <div class="code-block">
+&lt;script src="https://yourdomain.com/widget.js" 
+        data-bot-id="your-bot-id"
+        data-bot-name="Your Bot Name"
+        data-primary-color="#6366f1"
+        data-position="bottom-right"&gt;&lt;/script&gt;
+            </div>
+            
+            <p><strong>Customization Options:</strong></p>
+            <ul style="color: rgba(255,255,255,0.9); line-height: 1.6;">
+                <li><code>data-bot-id</code>: Your unique bot identifier</li>
+                <li><code>data-bot-name</code>: Display name for your chatbot</li>
+                <li><code>data-primary-color</code>: Custom color theme (hex code)</li>
+                <li><code>data-position</code>: Position on page (bottom-right, bottom-left)</li>
+            </ul>
+            
+            <div id="widget-status" style="margin-top: 20px; padding: 15px; background: rgba(59, 130, 246, 0.2); border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.3);">
+                <h4 style="color: #3b82f6; margin: 0 0 10px 0;">ℹ️ Configure your bot</h4>
+                <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 14px;">
+                    Replace the placeholder values in the script tag below with your real bot ID before embedding on your site.
+                </p>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>🎯 Look for the floating chat button in the bottom-right corner to test the widget!</strong></p>
+        </div>
+    </div>
+
+    <!-- QueryWing Beautiful Chatbot Widget -->
+    <script src="widget.js" 
+            data-bot-id="your-bot-id"
+            data-bot-name="Your Assistant"
+            data-primary-color="#6366f1"
+            data-position="bottom-right">
+    </script>
+</body>
+</html>
