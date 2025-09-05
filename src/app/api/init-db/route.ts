@@ -78,7 +78,8 @@ Always maintain a friendly, professional tone and focus on helping users underst
         retrievalMode: 'hybrid',
         status: 'active',
         published: true,
-        publicKey: 'demo-bot-1-key'
+        publicKey: 'demo-bot-1-key',
+        settings: {}
       }
     })
 
