@@ -223,10 +223,7 @@ export async function POST(request: NextRequest) {
           data: {
             tenantId: bot.tenantId,
             conversationId: conversation.id,
-            visitorId: conversation.visitorId,
-            botId: bot.id,
             status: 'pending',
-            requestType: 'chat_handoff',
             priority: 'normal'
           }
         })
