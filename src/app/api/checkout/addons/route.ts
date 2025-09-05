@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       payment_method_types: ['card'],
       line_items: [
         {
-          price_REDACTED: {
+          price_data: {
             currency: 'usd',
             product_data: {
               name: `${pricing.name} - ${quantity} ${addonType === 'credits' ? 'credits' : addonType === 'bots' ? 'bots' : 'agents'}`,
